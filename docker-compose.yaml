@@ -39,6 +39,13 @@ services:
     ports:
       - "4200:80"
 
+  backend-service:
+    build:
+      context: src/backendservice/BackendService
+      dockerfile: Dockerfile
+    ports:
+      - "5569:80"
+
   # demo-client:
   #   build:
   #     dockerfile: Dockerfile
