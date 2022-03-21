@@ -32,6 +32,13 @@ services:
       - jaeger-all-in-one
       - zipkin-all-in-one
 
+  fontend-example:
+    build: 
+      context: src/web/example-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "4200:80"
+
   # demo-client:
   #   build:
   #     dockerfile: Dockerfile

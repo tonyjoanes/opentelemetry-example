@@ -27,3 +27,18 @@ Bring things down with the following:
 docker-compose down
 ```
 
+## Angular app
+
+Installed Angular CLI
+
+```powershell
+npm install -g @angular/cli
+
+ng version
+
+Angular CLI: 13.3.0
+```
+
+```powershell
+docker build -t frontend-example-app:develop .
+```
