@@ -422,6 +422,10 @@
     </svg>
   </div>
 
+  <div class="button">
+    <button (click)="refreshWeatherData()">Refresh Weather Data</button>
+  </div>
+
   <div class="terminal">
     <pre>{{ result | json }}</pre>
   </div>

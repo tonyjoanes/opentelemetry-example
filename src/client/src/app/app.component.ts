@@ -23,11 +23,15 @@ export class AppComponent {
   }
 
   getData() {
-    console.log("Jafet")
     this.http.get('/weatherforecast').subscribe((data) => {
       console.log(data);
       this.result = data as WeatherForecast[];
     });
+  }
+
+  refreshWeatherData() {
+    console.log('refreshing weather data');
+    this.getData();
   }
 
 }
