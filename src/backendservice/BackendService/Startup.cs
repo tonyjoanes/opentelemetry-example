@@ -25,6 +25,14 @@ namespace BackendService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddCors(options => options.AddPolicy("CorsPolicy",
+                builder =>
+            {
+                builder.AllowAnyMethod().AllowAnyHeader()
+                    .WithOrigins("http://localhost:4200")
+                    .AllowCredentials();
+            }));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

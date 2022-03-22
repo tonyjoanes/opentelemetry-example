@@ -38,11 +38,14 @@ services:
       dockerfile: Dockerfile
     ports:
       - "4200:80"
+    depends_on:
+      - backend-service
 
   backend-service:
     build:
       context: src/backendservice/BackendService
       dockerfile: Dockerfile
+    container_name: backend-service
     ports:
       - "5569:80"
 
