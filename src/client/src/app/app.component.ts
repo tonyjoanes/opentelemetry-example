@@ -8,6 +8,8 @@ import { B3Propagator } from '@opentelemetry/propagator-b3';
 import { ZoneContextManager } from '@opentelemetry/context-zone';
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
 import { XMLHttpRequestInstrumentation } from '@opentelemetry/instrumentation-xml-http-request';
+import { Resource } from '@opentelemetry/resources';
+import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
 
 interface WeatherForecast {
         date: Date;
@@ -31,7 +33,11 @@ export class AppComponent {
     this.getData();
 
     //https://github.com/open-telemetry/opentelemetry-js/blob/main/examples/tracer-web/examples/xml-http-request/index.js
-    this.provider = new WebTracerProvider();
+    this.provider = new WebTracerProvider({
+      resource: new Resource({
+        [SemanticResourceAttributes.SERVICE_NAME]: 'client'
+      })
+    });
 
     this.provider.addSpanProcessor(new SimpleSpanProcessor(new ConsoleSpanExporter()));
     this.provider.addSpanProcessor(new SimpleSpanProcessor(new OTLPTraceExporter({
@@ -42,7 +48,7 @@ export class AppComponent {
       contextManager: new ZoneContextManager(),
       propagator: new B3Propagator()
     });
-
+.
     registerInstrumentations({
       instrumentations: [
         new XMLHttpRequestInstrumentation({
@@ -66,14 +72,14 @@ export class AppComponent {
 
     const webTracerWithZone = this.provider.getTracer('test_client');
 
-    const span1 = webTracerWithZone.startSpan('get-weather-data');
+    const span1 = webTracerWithZone.startSpan('get-weather-data-click');
 
     console.log('refreshing weather data');
 
     context.with(trace.setSpan(context.active(), span1), () => {
       this.http.get('/weatherforecast').subscribe((data) => {
         console.log(data);
-        trace.getSpan(context.active())?.addEvent('fetching-span1-completed');
+        trace.getSpan(context.active())?.addEvent('fetching-weather-data-completed');
         span1.end();
         this.result = data as WeatherForecast[];
       }, (error) => {
