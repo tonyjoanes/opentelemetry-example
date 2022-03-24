@@ -39,7 +39,7 @@
                                     .StartActivity(
                                         ActivityKind.Server,
                                         parentContext: propagationContext.ActivityContext,
-                                        name: "get-weather-data", 
+                                        name: "get-weather-data",
                                         links: links);
 
             var rng = new Random();

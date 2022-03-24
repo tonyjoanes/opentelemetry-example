@@ -35,12 +35,12 @@ namespace TestApi
             services.AddOpenTelemetryTracing(b =>
             {
                 b
+                .AddConsoleExporter()
                 .AddOtlpExporter(opt =>
                 {
-                    opt.Endpoint = new System.Uri("http://localhost:4200/traces");
+                    opt.Endpoint = new System.Uri("http://otel-collector:4318/v1/traces");
                     opt.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.HttpProtobuf;
                 })
-                .AddConsoleExporter()
                 .AddSource(serviceName)
                 .SetResourceBuilder(
                     ResourceBuilder.CreateDefault()
