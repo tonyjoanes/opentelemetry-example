@@ -6,9 +6,15 @@ namespace TestApi
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Microsoft.OpenApi.Models;
+    using OpenTelemetry.Resources;
+    using OpenTelemetry.Trace;
+    using System.Diagnostics;
 
     public class Startup
     {
+        private readonly string serviceName = "TestApi";
+        private readonly string serviceVersion = "1.0.0";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -24,6 +30,24 @@ namespace TestApi
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "TestApi", Version = "v1" });
+            });
+
+            services.AddOpenTelemetryTracing(b =>
+            {
+                b
+                .AddOtlpExporter(opt =>
+                {
+                    opt.Endpoint = new System.Uri("http://localhost:4200/traces");
+                    opt.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.HttpProtobuf;
+                })
+                .AddConsoleExporter()
+                .AddSource(serviceName)
+                .SetResourceBuilder(
+                    ResourceBuilder.CreateDefault()
+                        .AddService(serviceName: serviceName, serviceVersion: serviceVersion))
+                .AddHttpClientInstrumentation()
+                .AddAspNetCoreInstrumentation()
+                .AddSqlClientInstrumentation();
             });
         }
 

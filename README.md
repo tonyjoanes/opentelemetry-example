@@ -1,6 +1,12 @@
 # Open Telemetry Example
 
-A working example of open telemetry with front end and back end correlation. 
+A working example of open telemetry with front end and back end correlation.
+
+## Prerequisite
+
+- Docker for windows
+- .NET SDK and Runtime
+- Angular
 
 ## Starting it up
 

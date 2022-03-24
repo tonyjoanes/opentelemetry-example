@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
@@ -26,7 +27,25 @@
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {
+            var propagationContext = Telemetry.GetPropagationContext(Request);
+
+            var links = new List<ActivityLink>
+            {
+                new ActivityLink(propagationContext.ActivityContext)
+            };
+
+            using var myActivity = Telemetry
+                                    .MyActivitySource
+                                    .StartActivity(
+                                        ActivityKind.Server,
+                                        parentContext: propagationContext.ActivityContext,
+                                        name: "get-weather-data", 
+                                        links: links);
+
             var rng = new Random();
+
+            myActivity?.AddEvent(new($"using range ${rng}"));
+
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateTime.Now.AddDays(index),
@@ -34,6 +53,8 @@
                 Summary = Summaries[rng.Next(Summaries.Length)]
             })
             .ToArray();
+
+            _ = (myActivity?.SetStatus(System.Diagnostics.ActivityStatusCode.Ok, "Successfully generated weather data"));
         }
     }
 }
