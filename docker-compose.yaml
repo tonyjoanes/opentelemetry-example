@@ -37,23 +37,23 @@ services:
       - jaeger-all-in-one
       - zipkin-all-in-one
 
-  test_server:
-    image: test_server:latest
+  testapi:
+    image: testapi:latest
     build:
       context: ./src/server
       dockerfile: ./Dockerfile
     ports:
       - 5000:5000
 
-  test_client:
-    image: test_client:latest
+  client:
+    image: client:latest
     build:
       context: ./src/client
       dockerfile: ./Dockerfile
     ports:
       - 4200:80
     depends_on:
-      - test_server
+      - testapi
 
   # demo-client:
   #   build:

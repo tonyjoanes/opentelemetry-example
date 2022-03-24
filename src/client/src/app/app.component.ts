@@ -48,7 +48,7 @@ export class AppComponent {
       contextManager: new ZoneContextManager(),
       propagator: new B3Propagator()
     });
-.
+
     registerInstrumentations({
       instrumentations: [
         new XMLHttpRequestInstrumentation({
@@ -70,7 +70,7 @@ export class AppComponent {
 
   refreshWeatherData() {
 
-    const webTracerWithZone = this.provider.getTracer('test_client');
+    const webTracerWithZone = this.provider.getTracer('client');
 
     const span1 = webTracerWithZone.startSpan('get-weather-data-click');
 
